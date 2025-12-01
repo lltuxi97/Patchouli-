@@ -27,13 +27,11 @@
         * { margin: 0; padding: 0; box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
         html { scroll-behavior: smooth; }
         
-        /* 1. تخصيص شريط التمرير (Scrollbar) */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: var(--bg-main); }
         ::-webkit-scrollbar-thumb { background: var(--primary-gold); border-radius: 10px; border: 2px solid var(--bg-main); }
         ::-webkit-scrollbar-thumb:hover { background: var(--primary-dark); }
 
-        /* 2. تخصيص لون تحديد النص */
         ::selection { background: var(--primary-gold); color: #fff; }
 
         body {
@@ -41,14 +39,12 @@
             overflow-x: hidden; padding-bottom: 100px; line-height: 1.8; position: relative;
         }
 
-        /* نويز خفيف للخلفية */
         body::before {
             content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
             opacity: 0.4; pointer-events: none; z-index: 9998;
         }
 
-        /* 3. خلفية متحركة (Bokeh Effect) */
         .bokeh-container {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: -1; pointer-events: none;
         }
@@ -66,7 +62,6 @@
 
         h1, h2, h3, h4, .serif-font { font-family: 'Amiri', serif; }
 
-        /* اللودر */
         .loader-wrapper {
             position: fixed; inset: 0; background: var(--bg-main); z-index: 99999; 
             display: flex; justify-content: center; align-items: center; transition: opacity 0.8s ease, visibility 0.8s ease;
@@ -82,16 +77,15 @@
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 700;
         }
 
-        /* الهيدر */
         header {
             position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; padding: 15px 30px; 
-            background: rgba(244, 241, 234, 0.85); backdrop-filter: blur(20px); /* زيادة التغبيش */
+            background: rgba(244, 241, 234, 0.85); backdrop-filter: blur(20px);
             display: flex; justify-content: space-between; align-items: center;
             border-bottom: 1px solid rgba(191, 165, 117, 0.1); transition: 0.3s;
         }
         .logo-header { height: 60px; width: auto; border-radius: 50%; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
         .menu-icon { font-size: 1.6rem; color: var(--primary-dark); cursor: pointer; transition: 0.3s; }
-        .menu-icon:hover { color: var(--primary-gold); transform: rotate(90deg); } /* حركة عند الماوس */
+        .menu-icon:hover { color: var(--primary-gold); transform: rotate(90deg); }
         
         .sidebar {
             position: fixed; top: 0; right: -320px; width: 300px; height: 100%;
@@ -113,7 +107,7 @@
         }
         .overlay-bg.active { display: block; opacity: 1; }
 
-        /* الهيرو */
+        /* --- تعديلات الهيرو للموبايل --- */
         .hero {
             height: 95vh; position: relative; display: flex; align-items: center; justify-content: center; text-align: center;
             background: url('https://images.unsplash.com/photo-1560066984-138dadb4c035?ixlib=rb-4.0.3&auto=format&fit=crop&w=1674&q=80') center/cover no-repeat fixed;
@@ -122,10 +116,10 @@
         .hero-content { position: relative; z-index: 2; padding: 20px; }
         
         .hero-title-wrapper {
-            border: 2px solid rgba(191, 165, 117, 0.6); /* حدود ذهبية شفافة */
+            border: 2px solid rgba(191, 165, 117, 0.6);
             padding: 25px 50px;
             border-radius: 60px;
-            background: rgba(47, 62, 50, 0.5); /* خلفية داكنة شفافة */
+            background: rgba(47, 62, 50, 0.5);
             backdrop-filter: blur(8px);
             display: inline-block;
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
@@ -157,17 +151,15 @@
             background: transparent; color: var(--text-sub); cursor: pointer; font-family: 'Cairo'; font-weight: 600; transition: 0.4s;
             position: relative; overflow: hidden;
         }
-        /* تأثير عند مرور الماوس على الأزرار */
         .tab-btn:hover { border-color: var(--primary-dark); color: var(--primary-dark); }
         .tab-btn.active { background: var(--primary-dark); color: var(--text-creamy); border-color: var(--primary-dark); box-shadow: 0 10px 20px rgba(47, 62, 50, 0.2); }
         
         .tab-content { display: none; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; animation: fadeInUp 0.8s; max-width: 1200px; margin: 0 auto; }
         .tab-content.active { display: grid; }
 
-        /* 4. كروت الخدمات بلمسة زجاجية */
         .service-card {
-            background: rgba(253, 251, 247, 0.8); /* شفافية خفيفة */
-            backdrop-filter: blur(10px); /* تأثير الزجاج */
+            background: rgba(253, 251, 247, 0.8);
+            backdrop-filter: blur(10px);
             border-radius: 20px; padding: 35px;
             box-shadow: var(--shadow-soft); display: flex; flex-direction: column;
             transition: all 0.4s ease; border: 1px solid rgba(255,255,255,0.6);
@@ -176,7 +168,7 @@
         .service-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); border-color: var(--primary-gold); }
         .srv-title { font-size: 1.6rem; color: var(--primary-dark); margin-bottom: 20px; font-weight: 700; font-family: 'Amiri'; border-bottom: 1px solid rgba(191, 165, 117, 0.2); padding-bottom: 10px; }
         .menu-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px dashed rgba(191, 165, 117, 0.3); font-size: 0.95rem; transition: 0.2s; }
-        .menu-item:hover { padding-right: 5px; color: var(--primary-dark); } /* حركة بسيطة للنص */
+        .menu-item:hover { padding-right: 5px; color: var(--primary-dark); }
         .menu-price { font-family: 'Amiri'; font-weight: 700; color: var(--primary-gold); font-size: 1.1rem; }
         .book-btn-card { margin-top: 20px; text-align: center; font-size: 0.9rem; color: var(--primary-dark); text-decoration: none; font-weight: 600; border: 1px solid var(--primary-dark); padding: 8px; border-radius: 30px; transition: 0.3s; }
         .book-btn-card:hover { background: var(--primary-dark); color: var(--text-creamy); }
@@ -206,7 +198,6 @@
             border: 1px solid rgba(191, 165, 117, 0.2); flex-wrap: wrap; gap: 30px;
             position: relative; overflow: hidden;
         }
-        /* لمعة ذهبية متحركة */
         .gift-section::after {
             content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
@@ -247,36 +238,19 @@
         .contact-label { font-size: 0.9rem; color: var(--text-creamy); opacity: 0.8; }
         .footer-divider { width: 100px; height: 1px; background: rgba(255,255,255,0.1); margin: 30px auto; }
 
-        /* 5. زر الواتس العائم في الزاوية اليسرى */
         .bottom-bar { 
-            position: fixed; 
-            bottom: 30px; 
-            left: 30px; /* أقصى اليسار */
-            width: auto;
-            background: transparent; 
-            box-shadow: none; 
-            z-index: 999; 
-            border: none;
-            display: block; padding: 0;
+            position: fixed; bottom: 30px; left: 30px; width: auto; background: transparent; 
+            box-shadow: none; z-index: 999; border: none; display: block; padding: 0;
         }
 
         .wa-btn { 
-            background: #25D366; 
-            color: white; 
-            width: 60px; height: 60px; /* حجم مناسب */
-            border-radius: 50%; 
-            display: flex; align-items: center; justify-content: center; 
-            font-size: 2rem; 
-            text-decoration: none; 
-            transition: 0.3s; 
-            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-            border: 2px solid rgba(255,255,255,0.2);
-            /* نبض الأيقونة */
-            animation: pulse-wa 2.5s infinite;
+            background: #25D366; color: white; width: 60px; height: 60px; border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; font-size: 2rem; 
+            text-decoration: none; transition: 0.3s; box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            border: 2px solid rgba(255,255,255,0.2); animation: pulse-wa 2.5s infinite;
         }
         .wa-btn:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 10px 25px rgba(37, 211, 102, 0.4); }
 
-        /* أنيميشن نبض الواتس (Ripple Effect) */
         @keyframes pulse-wa {
             0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
             70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
@@ -296,6 +270,29 @@
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
         @keyframes fadeInScale { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+
+        /* --- تحسينات خاصة للجوال (Mobile Polish) --- */
+        @media (max-width: 768px) {
+            /* تصغير الهيرو والنص للجوال */
+            .hero { height: 60vh; background-attachment: scroll; background-position: center top; }
+            .hero h1 { font-size: 3rem; letter-spacing: 1px; }
+            .hero-title-wrapper { padding: 15px 30px; border-width: 1px; }
+            
+            /* تحسين المسافات والعناوين */
+            .section-title { font-size: 2.2rem; margin-top: 40px; }
+            .story-section { padding: 80px 20px; }
+            .story-text { font-size: 1.3rem; line-height: 2; }
+            
+            /* تحسين قسم الهدايا */
+            .gift-section { padding: 40px 25px; }
+            .gift-title { font-size: 1.8rem; }
+            .gift-icon { font-size: 4rem; opacity: 0.15; }
+            
+            /* تعديل مكان زر الواتس العائم */
+            .bottom-bar { left: 20px; bottom: 20px; }
+            .wa-btn { width: 55px; height: 55px; font-size: 1.8rem; }
+            .back-to-top { bottom: 90px; right: 20px; }
+        }
     </style>
 </head>
 <body>
@@ -524,7 +521,7 @@
             <div class="review-card">
                 <div class="review-header"><span class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></span><i class="fas fa-quote-left quote-icon"></i></div>
                 <p class="review-text">"مركز راقي ونظيف وجميل، العاملات راقيات في تعاملهن وشغلهم وأسعارهم ممتازة."</p>
-                <div class="reviewer-name">ملكة الإحساس</div>
+                <div class="reviewer-name">مجهول</div>
             </div>
         </div>
         <div class="reviews-slide">
