@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>باتشولي سبا | Patchouli Spa</title>
+    <link rel="icon" href="250276776_966463217552234_6839100984766045685_n.jpg" type="image/jpg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&family=Amiri:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-main: #F4F1EA; 
+            --bg-card: #FDFBF7; 
+            --primary-dark: #2F3E32; 
+            --primary-gold: #BFA575; 
+            --text-main: #4A4A4A;
+            --text-sub: #7D7D7D;
+            --text-creamy: #EAE6DD;
+            --radius-lg: 30px;
+            --shadow-soft: 0 10px 40px rgba(47, 62, 50, 0.05);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Cairo', sans-serif; background-color: var(--bg-main); color: var(--text-main);
+            overflow-x: hidden; padding-bottom: 100px; line-height: 1.8; position: relative;
+        }
+        /* خلفية نويز خفيفة للملمس */
+        body::before {
+            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+            opacity: 0.4; pointer-events: none; z-index: 9999;
+        }
+        h1, h2, h3, h4, .serif-font { font-family: 'Amiri', serif; }
+
+        /* اللودر */
+        .loader-wrapper {
+            position: fixed; inset: 0; background: var(--bg-main); z-index: 99999; 
+            display: flex; justify-content: center; align-items: center; transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+        .loader-logo { 
+            width: 120px; 
+            border-radius: 50%; /* جعل اللوجو دائري */
+            box-shadow: 0 0 30px rgba(191, 165, 117, 0.3);
+            animation: pulse 2s infinite; 
+        }
+        .loader-hidden { opacity: 0; visibility: hidden; }
+        .gold-text {
+            background: linear-gradient(45deg, #BFA575, #E6D2A8, #BFA575);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 700;
+        }
+
+        /* الهيدر */
+        header {
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; padding: 15px 30px; 
+            background: rgba(244, 241, 234, 0.8); backdrop-filter: blur(15px);
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid rgba(191, 165, 117, 0.1); transition: 0.3s;
+        }
+        .logo-header { 
+            height: 60px; 
+            width: auto; 
+            border-radius: 50%; /* جعل اللوجو دائري */
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); 
+        }
+        .menu-icon { font-size: 1.6rem; color: var(--primary-dark); cursor: pointer; transition: 0.3s; }
+        
+        .sidebar {
+            position: fixed; top: 0; right: -320px; width: 300px; height: 100%;
+            background: var(--primary-dark); z-index: 2000; transition: 0.5s cubic-bezier(0.77, 0.2, 0.05, 1.0);
+            padding: 50px 30px; display: flex; flex-direction: column; box-shadow: -10px 0 30px rgba(0,0,0,0.2);
+        }
+        .sidebar.active { right: 0; }
+        .close-btn { align-self: flex-end; font-size: 1.5rem; color: var(--text-creamy); cursor: pointer; margin-bottom: 50px; }
+        .sidebar a {
+            color: var(--text-creamy); text-decoration: none; font-size: 1.3rem; margin-bottom: 25px;
+            font-family: 'Amiri'; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px; display: block;
+        }
+        .overlay-bg {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1500;
+            display: none; opacity: 0; transition: 0.4s; backdrop-filter: blur(3px);
+        }
+        .overlay-bg.active { display: block; opacity: 1; }
+
+        /* الهيرو */
+        .hero {
+            height: 90vh; position: relative; display: flex; align-items: center; justify-content: center; text-align: center;
+            background: url('https://images.unsplash.com/photo-1560066984-138dadb4c035?ixlib=rb-4.0.3&auto=format&fit=crop&w=1674&q=80') center/cover no-repeat fixed;
+        }
+        .hero::after { content:''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.6) 100%); }
+        .hero-content { position: relative; z-index: 2; padding: 20px; }
+        .hero h1 { 
+            font-family: 'Amiri', serif; font-size: 5rem; color: var(--text-creamy); margin-bottom: 15px; 
+            font-weight: 700; text-shadow: 0 4px 20px rgba(0,0,0,0.6); animation: float 6s ease-in-out infinite;
+        }
+        .hero p { 
+            font-family: 'Cairo', sans-serif; font-size: 1.2rem; color: var(--text-creamy); font-weight: 400; letter-spacing: 3px;
+            border-top: 1px solid rgba(234, 230, 221, 0.3); border-bottom: 1px solid rgba(234, 230, 221, 0.3);
+            display: inline-block; padding: 10px 40px; background: rgba(47, 62, 50, 0.3); backdrop-filter: blur(5px); border-radius: 50px;
+        }
+
+        .brands-strip { background: var(--primary-dark); padding: 30px 0; overflow: hidden; white-space: nowrap; }
+        .brands-track { display: inline-block; animation: scroll 40s linear infinite; }
+        .brand-item { display: inline-block; color: rgba(253, 251, 247, 0.5); font-size: 0.9rem; margin: 0 50px; letter-spacing: 4px; text-transform: uppercase; }
+        @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(50%); } }
+
+        .story-section { padding: 120px 25px; text-align: center; max-width: 900px; margin: 0 auto; position: relative; }
+        .story-icon { font-size: 2.5rem; color: var(--primary-gold); margin-bottom: 25px; opacity: 0.8; }
+        .story-text { font-size: 1.5rem; color: var(--primary-dark); font-family: 'Amiri'; line-height: 2.2; }
+        .story-decoration { width: 1px; height: 80px; background: linear-gradient(to bottom, var(--primary-gold), transparent); margin: 40px auto 0; }
+
+        .section-header { text-align: center; margin-bottom: 50px; padding: 0 20px; margin-top: 60px; }
+        .section-title { font-size: 2.8rem; color: var(--primary-dark); margin-bottom: 10px; }
+        .section-desc { color: var(--text-sub); font-size: 1.1rem; }
+
+        .tabs-wrapper { padding: 0 20px; margin-bottom: 80px; }
+        .tabs-nav { display: flex; justify-content: center; gap: 15px; margin-bottom: 40px; flex-wrap: wrap; }
+        .tab-btn {
+            padding: 12px 35px; border-radius: 50px; border: 1px solid rgba(191, 165, 117, 0.3);
+            background: transparent; color: var(--text-sub); cursor: pointer; font-family: 'Cairo'; font-weight: 600; transition: 0.4s;
+        }
+        .tab-btn.active { background: var(--primary-dark); color: var(--text-creamy); border-color: var(--primary-dark); box-shadow: 0 10px 20px rgba(47, 62, 50, 0.2); }
+        .tab-content { display: none; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; animation: fadeInUp 0.8s; max-width: 1200px; margin: 0 auto; }
+        .tab-content.active { display: grid; }
+
+        .service-card {
+            background: var(--bg-card); border-radius: 20px; padding: 35px;
+            box-shadow: var(--shadow-soft); display: flex; flex-direction: column;
+            transition: all 0.4s ease; border: 1px solid rgba(255,255,255,1);
+            position: relative; overflow: hidden; border-right: 4px solid var(--primary-gold);
+        }
+        .service-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); border-color: var(--primary-gold); }
+        .srv-title { font-size: 1.6rem; color: var(--primary-dark); margin-bottom: 20px; font-weight: 700; font-family: 'Amiri'; border-bottom: 1px solid rgba(191, 165, 117, 0.2); padding-bottom: 10px; }
+        .menu-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px dashed rgba(191, 165, 117, 0.3); font-size: 0.95rem; }
+        .menu-price { font-family: 'Amiri'; font-weight: 700; color: var(--primary-gold); font-size: 1.1rem; }
+        .book-btn-card { margin-top: 20px; text-align: center; font-size: 0.9rem; color: var(--primary-dark); text-decoration: none; font-weight: 600; border: 1px solid var(--primary-dark); padding: 8px; border-radius: 30px; transition: 0.3s; }
+        .book-btn-card:hover { background: var(--primary-dark); color: var(--text-creamy); }
+
+        .packages-wrapper { background: #EBE8E1; padding: 100px 20px; margin: 0 20px 80px; border-radius: 50px; margin-bottom: 80px; text-align: center; }
+        .packages-scroll { display: flex; gap: 30px; overflow-x: auto; padding-bottom: 30px; scroll-snap-type: x mandatory; justify-content: center; }
+        .packages-scroll::-webkit-scrollbar { display: none; }
+        .pkg-card {
+            min-width: 300px; background: var(--bg-card); border-radius: var(--radius-lg); padding: 50px 30px; text-align: center; scroll-snap-align: center;
+            display: flex; flex-direction: column; justify-content: center; border: 1px solid rgba(255,255,255,0.5); transition: 0.4s; position: relative;
+        }
+        .pkg-card:hover { transform: translateY(-10px); }
+        .pkg-card.premium { background: var(--primary-dark); color: #FDFBF7; transform: scale(1.05); z-index: 2; box-shadow: 0 20px 50px rgba(47, 62, 50, 0.3); }
+        .pkg-card.premium:hover { transform: scale(1.05) translateY(-5px); }
+
+        .pkg-name { font-size: 1.6rem; font-family: 'Amiri'; margin-bottom: 15px; }
+        .pkg-price { font-size: 2.2rem; font-weight: 700; margin-bottom: 25px; font-family: 'Amiri'; }
+        .pkg-list { list-style: none; margin-bottom: 35px; font-size: 1rem; opacity: 0.9; line-height: 2; }
+        .pkg-btn { padding: 12px 30px; border-radius: 50px; text-decoration: none; border: 1px solid var(--primary-gold); color: var(--primary-gold); display: inline-block; transition: 0.3s; font-weight: 600; }
+        .premium .pkg-btn { background: var(--primary-gold); color: var(--primary-dark); border-color: var(--primary-gold); }
+
+        .gift-section {
+            background: linear-gradient(135deg, #FDFBF7 0%, #F1EEE5 100%);
+            margin: 60px 20px; padding: 60px 30px; border-radius: 40px;
+            display: flex; align-items: center; justify-content: space-between;
+            border: 1px solid rgba(191, 165, 117, 0.2); flex-wrap: wrap; gap: 30px;
+        }
+        .gift-content { flex: 1; min-width: 300px; }
+        .gift-title { font-family: 'Amiri'; font-size: 2.2rem; color: var(--primary-dark); margin-bottom: 15px; }
+        .gift-desc { color: var(--text-sub); margin-bottom: 25px; font-size: 1.1rem; }
+        .gift-icon { font-size: 5rem; color: var(--primary-gold); opacity: 0.2; transform: rotate(-15deg); }
+        
+        .faq-container { max-width: 750px; margin: 0 auto 80px; padding: 0 20px; }
+        .faq-row { background: #fff; border-radius: 15px; margin-bottom: 20px; padding: 0 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.02); transition: 0.3s; }
+        .faq-title { padding: 20px 0; cursor: pointer; font-weight: 600; display: flex; justify-content: space-between; color: var(--primary-dark); }
+        .faq-body { max-height: 0; overflow: hidden; transition: 0.4s; color: var(--text-sub); font-size: 0.95rem; }
+        .faq-row.active .faq-body { max-height: 150px; padding-bottom: 25px; }
+
+        .reviews-container { max-width: 1000px; margin: 0 auto 100px; padding: 0 20px; position: relative; height: 240px; overflow: hidden; }
+        .reviews-slide { position: absolute; top: 0; left: 0; width: 100%; display: flex; gap: 30px; opacity: 0; transition: opacity 1s ease-in-out; pointer-events: none; }
+        .reviews-slide.active { opacity: 1; pointer-events: all; z-index: 2; }
+        .review-card { flex: 1; background: var(--bg-card); padding: 30px; border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); border: 1px solid rgba(191, 165, 117, 0.2); display: flex; flex-direction: column; justify-content: center; }
+        .review-header { display: flex; justify-content: space-between; margin-bottom: 10px; }
+        .stars { color: #FFC107; } .quote-icon { color: var(--primary-gold); opacity: 0.3; }
+
+        footer { background: linear-gradient(to top, #1F2220, #2C3E30); color: #aaa; padding: 80px 20px 140px; text-align: center; }
+        
+        /* تنسيق الصورة الجديدة في الفوتر */
+        .footer-logo-img {
+            width: 150px;
+            height: auto;
+            margin: 0 auto 40px;
+            display: block;
+            border-radius: 50%; /* جعل اللوجو في الفوتر دائري أيضاً */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transition: transform 0.3s ease;
+        }
+        .footer-logo-img:hover {
+             transform: translateY(-5px);
+        }
+
+        .contact-grid { display: flex; gap: 30px; justify-content: center; margin: 30px 0; flex-wrap: wrap; }
+        .contact-icon { width: 60px; height: 60px; background: rgba(255,255,255,0.05); border: 1px solid rgba(191, 165, 117, 0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--primary-gold); font-size: 1.5rem; text-decoration: none; transition: 0.4s; margin: 0 auto 10px; }
+        .contact-icon:hover { color: var(--primary-dark); background: var(--primary-gold); transform: translateY(-5px); }
+        .contact-label { font-size: 0.9rem; color: var(--text-creamy); opacity: 0.8; }
+        .footer-divider { width: 100px; height: 1px; background: rgba(255,255,255,0.1); margin: 30px auto; }
+
+        .bottom-bar { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 420px; background: rgba(47, 62, 50, 0.95); backdrop-filter: blur(15px); padding: 10px 15px; border-radius: 60px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 15px 40px rgba(0,0,0,0.25); z-index: 999; border: 1px solid rgba(255,255,255,0.1); }
+        .wa-btn { background: #25D366; color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; text-decoration: none; transition: 0.3s; }
+        .reserve-btn { background: var(--bg-card); color: var(--primary-dark); padding: 12px 0; border-radius: 40px; text-decoration: none; font-weight: 700; flex-grow: 1; margin-left: 15px; text-align: center; font-size: 1.05rem; }
+
+        .back-to-top {
+            position: fixed; bottom: 100px; right: 20px; width: 45px; height: 45px;
+            background: var(--primary-gold); color: #fff; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2); cursor: pointer;
+            opacity: 0; visibility: hidden; transition: 0.3s; z-index: 990;
+        }
+        .back-to-top.show { opacity: 1; visibility: visible; }
+        .back-to-top:hover { transform: translateY(-5px); background: var(--primary-dark); }
+
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
+        @keyframes sparkle { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    </style>
+</head>
+<body>
+
+    <div class="loader-wrapper" id="loader">
+        <img src="250276776_966463217552234_6839100984766045685_n.jpg" alt="Logo" class="loader-logo">
+    </div>
+
+    <div class="overlay-bg" id="overlay" onclick="toggleMenu()"></div>
+
+    <div class="sidebar" id="sidebar">
+        <i class="fas fa-times close-btn" onclick="toggleMenu()"></i>
+        <a href="#" onclick="toggleMenu()">الرئيسية</a>
+        <a href="#services" onclick="toggleMenu()">خدماتنا</a>
+        <a href="#packages" onclick="toggleMenu()">الباقات</a>
+        <a href="#faq" onclick="toggleMenu()">الأسئلة الشائعة</a>
+        <a href="https://wa.me/966569663331">اتصل بنا</a>
+    </div>
+
+    <header>
+        <img src="250276776_966463217552234_6839100984766045685_n.jpg" alt="Patchouli" class="logo-header">
+        <i class="fas fa-bars menu-icon" onclick="toggleMenu()"></i>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content" data-aos="zoom-in" data-aos-duration="1200">
+            <h1>عالم الجمال</h1>
+            <p>حيث تلتقي الفخامة بالهدوء</p>
+        </div>
+    </section>
+
+    <div class="brands-strip">
+        <div class="brands-track">
+            <span class="brand-item">MATIS PARIS</span>
+            <span class="brand-item">MOREMO</span>
+            <span class="brand-item">L'OREAL</span>
+            <span class="brand-item">OLAPLEX</span>
+            <span class="brand-item">MATIS PARIS</span>
+            <span class="brand-item">MOREMO</span>
+        </div>
+    </div>
+
+    <section class="story-section" data-aos="fade-up">
+        <i class="fas fa-spa story-icon"></i>
+        <p class="story-text">
+            "في زحمة الحياة، خلقنا لكِ ملاذاً من السكينة. باتشولي ليس مجرد صالون، بل مساحة هادئة صُممت لتجديد روحك والعناية بجمالك بلمسات ناعمة ومنتجات عالمية."
+        </p>
+        <div class="story-decoration"></div>
+    </section>
+
+    <div class="section-header" id="services">
+        <h2 class="section-title">قائمة الخدمات</h2>
+        <p class="section-desc">اختاري ما يناسبك من خدماتنا المتنوعة</p>
+    </div>
+
+    <div class="tabs-wrapper">
+        <div class="tabs-nav">
+            <button class="tab-btn active" onclick="openTab(event, 'hair')">العناية بالشعر</button>
+            <button class="tab-btn" onclick="openTab(event, 'nails')">الأظافر</button>
+            <button class="tab-btn" onclick="openTab(event, 'care')">العناية والبشرة</button>
+        </div>
+
+        <div id="hair" class="tab-content active">
+            <div class="service-card">
+                <h4 class="srv-title">القص والاستشوار</h4>
+                <div class="menu-list">
+                    <div class="menu-item"><span>قص شعر عادي</span><span class="menu-price">60 ريال</span></div>
+                    <div class="menu-item"><span>قص بوي</span><span class="menu-price">115 ريال</span></div>
+                    <div class="menu-item"><span>قص غرة</span><span class="menu-price">33 ريال</span></div>
+                    <div class="menu-item"><span>قص أطراف شعر</span><span class="menu-price">60 ريال</span></div>
+                    <div class="menu-item"><span>إزالة تقصف الشعر (جهاز)</span><span class="menu-price">115 ريال</span></div>
+                    <div class="menu-item"><span>غسيل شعر</span><span class="menu-price">19 ريال</span></div>
+                    <div class="menu-item"><span>استشوار (يبدأ من)</span><span class="menu-price">57 ريال</span></div>
+                    <div class="menu-item"><span>استشوار مع ويفي</span><span class="menu-price">115 ريال</span></div>
+                    <div class="menu-item"><span>تسريحة شعر وسط</span><span class="menu-price">230 ريال</span></div>
+                    <div class="menu-item"><span>تسريحة شعر طويل</span><span class="menu-price">280 ريال</span></div>
+                </div>
+                <a href="https://wa.me/966569663331?text=مرحباً، أرغب بحجز موعد لخدمات القص والاستشوار" class="book-btn-card">احجزي الآن</a>
+            </div>
+            <div class="service-card">
+                <h4 class="srv-title">المعالجات والصبغات</h4>
+                <div class="menu-list">
+                    <div class="menu-item"><span>تريتمنت الصبار (بالزيوت/العسل)</span><span class="menu-price">230 ريال</span></div>
+                    <div class="menu-item"><span>تريتمنت الخلايا الجذعية</span><span class="menu-price">230 ريال</span></div>
+                    <div class="menu-item"><span>تنظيف فروة الرأس</span><span class="menu-price">230 ريال</span></div>
+                    <div class="menu-item"><span>البوتكس مع البلازما</span><span class="menu-price">280 ريال</span></div>
+                    <div class="menu-item"><span>كولاجين الأزرق (يبدأ من)</span><span class="menu-price">345 ريال</span></div>
+                    <div class="menu-item"><span>أولابلكس</span><span class="menu-price">230 ريال</span></div>
+                    <div class="menu-item"><span>حمام عادي كريمي</span><span class="menu-price">115 ريال</span></div>
+                </div>
+                <a href="https://wa.me/966569663331?text=مرحباً، أرغب بحجز موعد لخدمات المعالجات والصبغات" class="book-btn-card">احجزي الآن</a>
+            </div>
+        </div>
+
+        <div id="nails" class="tab-content">
+            <div class="service-card">
+                <h4 class="srv-title">العناية بالأظافر</h4>
+                <div class="menu-list">
+                    <div class="menu-item"><span>بدكير مناكير كلاسيك</span><span class="menu-price">150 ريال</span></div>
+                    <div class="menu-item"><span>بدكير مناكير ذهب</span><span class="menu-price">150 ريال</span></div>
+                    <div class="menu-item"><span>بدكير مناكير سيجنتشر</span><span class="menu-price">320 ريال</span></div>
+                    <div class="menu-item"><span>بدكير يدين فقط</span><span class="menu-price">75 ريال</span></div>
+                    <div class="menu-item"><span>بدكير رجلين فقط</span><span class="menu-price">75 ريال</span></div>
+                    <div class="menu-item"><span>برافين</span><span class="menu-price">61 ريال</span></div>
+                </div>
+                <a href="https://wa.me/966569663331?text=مرحباً، أرغب بحجز موعد للعناية بالأظافر" class="book-btn-card">احجزي الآن</a>
+            </div>
+            <div class="service-card">
+                <h4 class="srv-title">التركيب واللون</h4>
+                <div class="menu-list">
+                    <div class="menu-item"><span>أكريليك</span><span class="menu-price">479 ريال</span></div>
+                    <div class="menu-item"><span>رتوش أكريليك</span><span class="menu-price">173 ريال</span></div>
+                    <div class="menu-item"><span>أظافر أكريليك (أرجل)</span><span class="menu-price">61 ريال</span></div>
+                    <div class="menu-item"><span>لون مناكير عادي</span><span class="menu-price">23 ريال</span></div>
+                    <div class="menu-item"><span>لون مناكير فرنسي</span><span class="menu-price">35 ريال</span></div>
+                    <div class="menu-item"><span>لون مناكير جل</span><span class="menu-price">115 ريال</span></div>
+                    <div class="menu-item"><span>لون مغناطيس جل</span><span class="menu-price">115 ريال</span></div>
+                    <div class="menu-item"><span>لون كروم</span><span class="menu-price">50 ريال</span></div>
+                    <div class="menu-item"><span>الرسم على الأظافر</span><span class="menu-price">50 ريال</span></div>
+                </div>
+                <a href="https://wa.me/966569663331?text=مرحباً، أرغب بحجز موعد للتركيب واللون" class="book-btn-card">احجزي الآن</a>
+            </div>
+        </div>
+        
+        <div id="care" class="tab-content">
+            <div class="service-card">
+                <h4 class="srv-title">العناية بالبشرة</h4>
+                <div class="menu-list">
+                    <div class="menu-item"><span>تنظيف بشرة بالكولاجين</span><span class="menu-price">350 ريال</span></div>
+                    <div class="menu-item"><span>تنظيف بشرة عميق بالفيتامينات</span><span class="menu-price">280 ريال</span></div>
+                    <div class="menu-item"><span>تنظيف بشرة عادي</span><span class="menu-price">184 ريال</span></div>
+                    <div class="menu-item"><span>تنظيف خشم</span><span class="menu-price">73 ريال</span></div>
+                    <div class="menu-item"><span>تشقير وصبغة حواجب</span><span class="menu-price">60 ريال</span></div>
+                </div>
+                <a href="https://wa.me/966569663331?text=مرحباً، أرغب بحجز موعد للعناية بالبشرة" class="book-btn-card">احجزي الآن</a>
+            </div>
+            <div class="service-card">
+                <h4 class="srv-title">إزالة الشعر (فتلة & شمع)</h4>
+                <div class="menu-list">
+                    <div class="menu-item"><span>فتلة حواجب / وجه / رقبة</span><span class="menu-price">63-69 ريال</span></div>
+                    <div class="menu-item"><span>فتلة شنب</span><span class="menu-price">33 ريال</span></div>
+                    <div class="menu-item"><span>شمع وجه / رقبة</span><span class="menu-price">51-63 ريال</span></div>
+                    <div class="menu-item"><span>شمع يدين / رجلين</span><span class="menu-price">130 ريال</span></div>
+                    <div class="menu-item"><span>حلاوة يدين / رجلين</span><span class="menu-price">130 ريال</span></div>
+                    <div class="menu-item"><span>حلاوة جسم كامل</span><span class="menu-price">420 ريال</span></div>
+                </div>
+                <a href="https://wa.me/966569663331?text=مرحباً، أرغب بحجز موعد لإزالة الشعر" class="book-btn-card">احجزي الآن</a>
+            </div>
+            <div class="service-card">
+                <h4 class="srv-title">الدلكة</h4>
+                <div class="menu-list">
+                    <div class="menu-item"><span>دلكة جسم كامل</span><span class="menu-price">345 ريال</span></div>
+                    <div class="menu-item"><span>دلكة يدين</span><span class="menu-price">115 ريال</span></div>
+                    <div class="menu-item"><span>دلكة رجلين</span><span class="menu-price">115 ريال</span></div>
+                </div>
+                <a href="https://wa.me/966569663331?text=مرحباً، أرغب بحجز موعد للدلكة" class="book-btn-card">احجزي الآن</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="gift-section" data-aos="fade-up">
+        <div class="gift-content">
+            <h2 class="gift-title">اهدي من تحبين</h2>
+            <p class="gift-desc">كوبونات باتشولي هي الهدية المثالية لأي مناسبة. امنحي من تحبين تجربة استرخاء لا تنسى.</p>
+            <a href="https://wa.me/966569663331?text=مرحباً، أريد شراء كوبون هدية" class="pkg-btn">شراء كوبون هدية</a>
+        </div>
+        <i class="fas fa-gift gift-icon"></i>
+    </div>
+
+    <div class="packages-wrapper" id="packages">
+        <h2 class="section-title" style="margin-bottom:40px;">باقات مميزة</h2>
+        <div class="packages-scroll">
+            <div class="pkg-card">
+                <h3 class="pkg-name">بكج الشعر</h3>
+                <div class="pkg-price gold-text">380 ريال</div>
+                <ul class="pkg-list"><li>تنظيف فروة</li><li>تريتمنت</li><li>جهاز إزالة التقصف</li></ul>
+                <a href="https://wa.me/966569663331?text=مرحباً، أرغب بحجز بكج الشعر" class="pkg-btn">احجزي الباقة</a>
+            </div>
+            <div class="pkg-card premium">
+                <h3 class="pkg-name">باقة الدلال</h3>
+                <div class="pkg-price gold-text">580 ريال</div>
+                <ul class="pkg-list"><li>مساج استرخائي للجسم</li><li>مساج البرافين لليدين والرجلين</li><li>مساج خاص بالشعر</li><li>بدكير + شسوار</li></ul>
+                <a href="https://wa.me/966569663331?text=مرحباً، أرغب بحجز باقة الدلال" class="pkg-btn">احجزي الباقة</a>
+            </div>
+            <div class="pkg-card">
+                <h3 class="pkg-name">العروس</h3>
+                <div class="pkg-price gold-text">2500 ريال</div>
+                <ul class="pkg-list"><li>برنامج عناية كامل</li><li>جلسات مكثفة</li><li>بروفة العرس</li></ul>
+                <a href="https://wa.me/966569663331?text=مرحباً، أرغب بحجز باقة العروس" class="pkg-btn">احجزي الباقة</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-header" id="faq">
+        <h2 class="section-title">أسئلة شائعة</h2>
+    </div>
+    <div class="faq-container">
+        <div class="faq-row">
+            <div class="faq-title" onclick="toggleFaq(this)">ما هي ساعات العمل؟ <i class="fas fa-chevron-down"></i></div>
+            <div class="faq-body">نستقبلكم يومياً من 1 ظهراً حتى 10 مساءً، والجمعة من 4 عصراً.</div>
+        </div>
+        <div class="faq-row">
+            <div class="faq-title" onclick="toggleFaq(this)">هل الحجز المسبق ضروري؟ <i class="fas fa-chevron-down"></i></div>
+            <div class="faq-body">نفضل الحجز المسبق لضمان خدمتكم في الوقت المناسب دون انتظار.</div>
+        </div>
+    </div>
+
+    <div class="section-header">
+        <h2 class="section-title">قالوا عن باتشولي</h2>
+        <p class="section-desc">سعيدون بخدمة أكثر من 1400 عميلة</p>
+    </div>
+
+    <div class="reviews-container">
+        <div class="reviews-slide active">
+            <div class="review-card">
+                <div class="review-header"><span class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></span><i class="fas fa-quote-left quote-icon"></i></div>
+                <p class="review-text">"يا بنات لا تتعدون نعيمة بالصبغة خيال والله تحفة! جربت عندها أول مرة وطلعت وأنا بقمة الرضا."</p>
+                <div class="reviewer-name">Dh H.</div>
+            </div>
+            <div class="review-card">
+                <div class="review-header"><span class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></span><i class="fas fa-quote-left quote-icon"></i></div>
+                <p class="review-text">"مركز راقي ونظيف وجميل، العاملات راقيات في تعاملهن وشغلهم وأسعارهم ممتازة."</p>
+                <div class="reviewer-name">ملكة الإحساس</div>
+            </div>
+        </div>
+        <div class="reviews-slide">
+            <div class="review-card">
+                <div class="review-header"><span class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></span><i class="fas fa-quote-left quote-icon"></i></div>
+                <p class="review-text">"سويت تنظيف فروة واستشوار عند أمل التونسية، وبصراحة ما شاء الله عليها فنانة!"</p>
+                <div class="reviewer-name">وتين</div>
+            </div>
+            <div class="review-card">
+                <div class="review-header"><span class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></span><i class="fas fa-quote-left quote-icon"></i></div>
+                <p class="review-text">"تسلم يدين أمل مره عجبني شغلها بالأظافر، دقيقة ونظيفة جداً."</p>
+                <div class="reviewer-name">زبونة قوقل</div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content" data-aos="fade-up">
+            <img src="250276776_966463217552234_6839100984766045685_n.jpg" alt="Patchouli Spa" class="footer-logo-img">
+            
+            <div class="contact-grid">
+                <div class="contact-item-box">
+                    <a href="https://maps.google.com/?q=Patchouli+Spa+Buraidah" target="_blank" class="contact-icon"><i class="fas fa-map-marker-alt"></i></a>
+                    <div class="contact-label">الموقع</div>
+                </div>
+                <div class="contact-item-box">
+                    <a href="https://www.instagram.com/patcholi_qs" target="_blank" class="contact-icon"><i class="fab fa-instagram"></i></a>
+                    <div class="contact-label">انستقرام</div>
+                </div>
+                <div class="contact-item-box">
+                    <a href="tel:+966569663331" class="contact-icon"><i class="fas fa-phone-alt"></i></a>
+                    <div class="contact-label">اتصال</div>
+                </div>
+            </div>
+            <div class="footer-divider"></div>
+            <p style="font-size:0.8rem; opacity:0.6;">© 2025 جميع الحقوق محفوظة لـ Patchouli Spa</p>
+        </div>
+    </footer>
+
+    <nav class="bottom-bar">
+        <a href="https://wa.me/966569663331" class="wa-btn"><i class="fab fa-whatsapp"></i></a>
+        <a href="https://wa.me/966569663331?text=مرحباً، أرغب بحجز موعد" class="reserve-btn">احجزي موعدك الآن</a>
+    </nav>
+
+    <div class="back-to-top" onclick="window.scrollTo(0,0)"><i class="fas fa-arrow-up"></i></div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 800, once: true });
+
+        window.addEventListener('load', function() {
+            const loader = document.getElementById('loader');
+            loader.classList.add('loader-hidden');
+            setTimeout(() => { loader.style.display = 'none'; }, 800);
+        });
+
+        window.addEventListener('scroll', function() {
+            const backToTop = document.querySelector('.back-to-top');
+            if (window.scrollY > 300) { backToTop.classList.add('show'); }
+            else { backToTop.classList.remove('show'); }
+        });
+
+        function toggleMenu() {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('overlay').classList.toggle('active');
+        }
+
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+                tabcontent[i].classList.remove("active");
+            }
+            tablinks = document.getElementsByClassName("tab-btn");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
+            document.getElementById(tabName).style.display = "grid";
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+
+        function toggleFaq(element) {
+            element.parentElement.classList.toggle('active');
+            let icon = element.querySelector('i');
+            if(element.parentElement.classList.contains('active')){
+                icon.classList.remove('fa-chevron-down');
+                icon.classList.add('fa-chevron-up');
+            } else {
+                icon.classList.remove('fa-chevron-up');
+                icon.classList.add('fa-chevron-down');
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            let slides = document.querySelectorAll('.reviews-slide');
+            let currentIndex = 0;
+            setInterval(() => {
+                slides[currentIndex].classList.remove('active');
+                currentIndex = (currentIndex + 1) % slides.length;
+                slides[currentIndex].classList.add('active');
+            }, 5000);
+        });
+    </script>
+</body>
+</html>
