@@ -43,17 +43,25 @@
             opacity: 0.4; pointer-events: none; z-index: 9998;
         }
 
+        /* --- لمسة 1: خلفية التموجات العضوية (Organic Blobs) --- */
         .bokeh-container {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: -1; pointer-events: none;
         }
         .bokeh {
-            position: absolute; width: 50vw; height: 50vw; border-radius: 50%;
-            background: radial-gradient(circle, rgba(191, 165, 117, 0.1) 0%, rgba(191, 165, 117, 0) 70%);
-            animation: moveBokeh 20s infinite alternate ease-in-out;
+            position: absolute; width: 60vw; height: 60vw; 
+            background: radial-gradient(circle, rgba(191, 165, 117, 0.12) 0%, rgba(191, 165, 117, 0) 70%);
+            /* شكل غير منتظم */
+            border-radius: 63% 37% 54% 46% / 55% 48% 52% 45%; 
+            animation: moveBlob 20s infinite alternate ease-in-out;
+            filter: blur(40px);
         }
-        .bokeh:nth-child(1) { top: -10%; left: -10%; }
-        .bokeh:nth-child(2) { bottom: -10%; right: -10%; animation-delay: -5s; }
-        @keyframes moveBokeh { 0% { transform: translate(0, 0); } 100% { transform: translate(30px, 30px); } }
+        .bokeh:nth-child(1) { top: -20%; left: -20%; animation-duration: 25s; }
+        .bokeh:nth-child(2) { bottom: -20%; right: -20%; animation-delay: -5s; background: radial-gradient(circle, rgba(47, 62, 50, 0.08) 0%, rgba(47, 62, 50, 0) 70%); }
+        
+        @keyframes moveBlob {
+            0% { transform: translate(0, 0) rotate(0deg); border-radius: 63% 37% 54% 46% / 55% 48% 52% 45%; }
+            100% { transform: translate(50px, 50px) rotate(20deg); border-radius: 40% 60% 40% 60% / 40% 60% 40% 60%; }
+        }
 
         h1, h2, h3, h4, .serif-font { font-family: 'Amiri', serif; }
 
@@ -63,19 +71,29 @@
         }
         .loader-logo { width: 100px; border-radius: 50%; box-shadow: 0 0 30px rgba(191, 165, 117, 0.4); animation: pulse 2s infinite; }
         .loader-hidden { opacity: 0; visibility: hidden; }
-        .gold-text {
-            background: linear-gradient(45deg, #BFA575, #E6D2A8, #BFA575);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 700;
-        }
 
+        /* --- لمسة 2: نص ذهبي لامع --- */
+        .shimmer-text {
+            background: linear-gradient(to right, #BFA575 0%, #F9F1D8 50%, #BFA575 100%);
+            background-size: 200% auto;
+            color: #BFA575;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shineText 4s linear infinite;
+            font-weight: 700;
+        }
+        @keyframes shineText { to { background-position: 200% center; } }
+
+        /* الهيدر */
         header {
             position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; padding: 10px 20px; 
-            background: rgba(244, 241, 234, 0.9); backdrop-filter: blur(10px);
+            background: rgba(244, 241, 234, 0.85); backdrop-filter: blur(15px);
             display: flex; justify-content: space-between; align-items: center;
             border-bottom: 1px solid rgba(191, 165, 117, 0.1);
         }
         .logo-header { height: 45px; width: auto; border-radius: 50%; }
-        .menu-icon { font-size: 1.4rem; color: var(--primary-dark); cursor: pointer; }
+        .menu-icon { font-size: 1.4rem; color: var(--primary-dark); cursor: pointer; transition: 0.3s; }
+        .menu-icon:hover { color: var(--primary-gold); }
         
         .sidebar {
             position: fixed; top: 0; right: -300px; width: 280px; height: 100%;
@@ -103,13 +121,13 @@
         .hero-content { position: relative; z-index: 2; padding: 20px; width: 100%; }
         
         .hero-title-wrapper {
-            border: 1px solid rgba(191, 165, 117, 0.6); padding: 15px 20px;
-            border-radius: 40px; background: rgba(47, 62, 50, 0.6);
-            backdrop-filter: blur(5px); display: inline-block; max-width: 90%;
+            border: 1px solid rgba(191, 165, 117, 0.6); padding: 15px 30px;
+            border-radius: 50px; background: rgba(47, 62, 50, 0.5);
+            backdrop-filter: blur(8px); display: inline-block; max-width: 90%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4); /* ظل أقوى */
         }
         .hero h1 { 
-            font-family: 'Amiri', serif; font-size: 2.5rem; 
-            color: var(--primary-gold); margin: 0; font-weight: 700; text-shadow: 0 4px 10px rgba(0,0,0,0.8); 
+            font-family: 'Amiri', serif; font-size: 2.8rem; margin: 0;
             letter-spacing: 1px; text-transform: uppercase; line-height: 1.2;
         }
 
@@ -118,12 +136,21 @@
         .brand-item { display: inline-block; color: rgba(253, 251, 247, 0.5); font-size: 0.8rem; margin: 0 30px; letter-spacing: 3px; }
         @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(50%); } }
 
-        .story-section { padding: 80px 20px; text-align: center; max-width: 900px; margin: 0 auto; }
-        .story-icon { font-size: 2rem; color: var(--primary-gold); margin-bottom: 20px; opacity: 0.8; }
+        .story-section { padding: 80px 20px; text-align: center; max-width: 900px; margin: 0 auto; position: relative; }
+        .story-icon { font-size: 2rem; color: var(--primary-gold); margin-bottom: 20px; opacity: 0.8; animation: float 3s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
         .story-text { font-size: 1.2rem; color: var(--primary-dark); font-family: 'Amiri'; line-height: 2; }
-        .story-decoration { width: 1px; height: 60px; background: linear-gradient(to bottom, var(--primary-gold), transparent); margin: 30px auto 0; }
+        
+        /* --- لمسة 3: فاصل الغصن (Leaf Divider) --- */
+        .leaf-divider { 
+            display: flex; justify-content: center; align-items: center; margin: 40px auto; opacity: 0.5; 
+        }
+        .leaf-divider::before, .leaf-divider::after {
+            content: ""; width: 60px; height: 1px; background: var(--primary-gold); margin: 0 15px;
+        }
+        .leaf-icon { color: var(--primary-gold); font-size: 1.2rem; }
 
-        .section-header { text-align: center; margin-bottom: 40px; padding: 0 20px; margin-top: 60px; }
+        .section-header { text-align: center; margin-bottom: 40px; padding: 0 20px; margin-top: 40px; }
         .section-title { font-size: 2.2rem; color: var(--primary-dark); margin-bottom: 5px; }
         .section-desc { color: var(--text-sub); font-size: 1rem; }
 
@@ -131,113 +158,104 @@
         .tabs-nav { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; flex-wrap: wrap; }
         .tab-btn {
             padding: 10px 25px; border-radius: 40px; border: 1px solid rgba(191, 165, 117, 0.3);
-            background: transparent; color: var(--text-sub); font-size: 0.9rem; cursor: pointer; font-family: 'Cairo'; font-weight: 600;
+            background: transparent; color: var(--text-sub); font-size: 0.9rem; cursor: pointer; font-family: 'Cairo'; font-weight: 600; transition: 0.3s;
         }
-        .tab-btn.active { background: var(--primary-dark); color: var(--text-creamy); border-color: var(--primary-dark); }
+        .tab-btn.active { background: var(--primary-dark); color: var(--text-creamy); border-color: var(--primary-dark); transform: scale(1.05); }
         .tab-content { display: none; grid-template-columns: 1fr; gap: 20px; animation: fadeInUp 0.5s; }
         .tab-content.active { display: grid; }
 
+        /* --- لمسة 4: توهج الكروت (Card Glow) --- */
         .service-card {
             background: rgba(253, 251, 247, 0.9); border-radius: 20px; padding: 25px;
             box-shadow: var(--shadow-soft); border: 1px solid rgba(255,255,255,0.6);
             border-right: 4px solid var(--primary-gold);
+            transition: all 0.3s ease;
         }
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(191, 165, 117, 0.15); /* وهج ذهبي */
+            border-color: rgba(191, 165, 117, 0.4);
+        }
+
         .srv-title { font-size: 1.4rem; color: var(--primary-dark); margin-bottom: 15px; font-family: 'Amiri'; padding-bottom: 8px; border-bottom: 1px solid rgba(191, 165, 117, 0.2); }
         .menu-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px dashed rgba(191, 165, 117, 0.3); font-size: 0.9rem; }
         .menu-price { font-family: 'Amiri'; font-weight: 700; color: var(--primary-gold); font-size: 1rem; }
-        .book-btn-card { margin-top: 15px; display: block; text-align: center; font-size: 0.9rem; color: var(--primary-dark); text-decoration: none; font-weight: 600; border: 1px solid var(--primary-dark); padding: 8px; border-radius: 30px; }
+        .book-btn-card { margin-top: 15px; display: block; text-align: center; font-size: 0.9rem; color: var(--primary-dark); text-decoration: none; font-weight: 600; border: 1px solid var(--primary-dark); padding: 8px; border-radius: 30px; transition: 0.3s; }
+        .book-btn-card:hover { background: var(--primary-dark); color: #fff; }
 
         .packages-wrapper { background: #EBE8E1; padding: 60px 15px; margin: 0 15px 60px; border-radius: 30px; text-align: center; }
         .packages-scroll { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 20px; scroll-snap-type: x mandatory; }
         .pkg-card {
             min-width: 280px; background: var(--bg-card); border-radius: 20px; padding: 40px 20px; text-align: center; scroll-snap-align: center;
-            border: 1px solid rgba(255,255,255,0.5);
+            border: 1px solid rgba(255,255,255,0.5); transition: 0.3s;
         }
+        .pkg-card:hover { transform: translateY(-5px); }
         .pkg-card.premium { background: var(--primary-dark); color: #FDFBF7; transform: scale(1.02); }
         .pkg-name { font-size: 1.4rem; font-family: 'Amiri'; margin-bottom: 10px; }
         .pkg-price { font-size: 2rem; font-weight: 700; margin-bottom: 20px; font-family: 'Amiri'; }
         .pkg-list { list-style: none; margin-bottom: 25px; font-size: 0.95rem; opacity: 0.9; line-height: 2; }
-        .pkg-btn { padding: 10px 25px; border-radius: 40px; text-decoration: none; border: 1px solid var(--primary-gold); color: var(--primary-gold); display: inline-block; font-weight: 600; font-size: 0.9rem; }
+        .pkg-btn { padding: 10px 25px; border-radius: 40px; text-decoration: none; border: 1px solid var(--primary-gold); color: var(--primary-gold); display: inline-block; font-weight: 600; font-size: 0.9rem; transition: 0.3s; }
+        .pkg-btn:hover { background: var(--primary-gold); color: #fff; }
         .premium .pkg-btn { background: var(--primary-gold); color: var(--primary-dark); }
 
         .gift-section {
             background: linear-gradient(135deg, #FDFBF7 0%, #F1EEE5 100%);
             margin: 40px 15px; padding: 40px 20px; border-radius: 30px;
             text-align: center; border: 1px solid rgba(191, 165, 117, 0.2);
+            position: relative; overflow: hidden;
         }
+        /* لمعة على كرت الهدية */
+        .gift-section::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.5), transparent);
+            transform: skewX(-25deg); animation: shineCard 5s infinite;
+        }
+        @keyframes shineCard { 100% { left: 150%; } }
+
         .gift-title { font-family: 'Amiri'; font-size: 1.8rem; color: var(--primary-dark); margin-bottom: 10px; }
         .gift-desc { color: var(--text-sub); margin-bottom: 20px; font-size: 1rem; }
         .gift-icon { font-size: 4rem; color: var(--primary-gold); opacity: 0.15; margin-top: 10px; display: block; }
 
         .faq-container { padding: 0 15px; margin-bottom: 60px; }
-        .faq-row { background: #fff; border-radius: 15px; margin-bottom: 15px; padding: 0 20px; box-shadow: 0 3px 10px rgba(0,0,0,0.02); }
+        .faq-row { background: #fff; border-radius: 15px; margin-bottom: 15px; padding: 0 20px; box-shadow: 0 3px 10px rgba(0,0,0,0.02); transition: 0.3s; }
+        .faq-row:hover { box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
         .faq-title { padding: 15px 0; cursor: pointer; font-weight: 600; display: flex; justify-content: space-between; color: var(--primary-dark); font-size: 0.95rem; }
         .faq-body { max-height: 0; overflow: hidden; transition: 0.4s; color: var(--text-sub); font-size: 0.9rem; }
         .faq-row.active .faq-body { max-height: 150px; padding-bottom: 20px; }
 
-        /* --- تنسيق السلايدر التلقائي --- */
+        /* التقييمات */
         .reviews-container {
             position: relative;
-            max-width: 1000px;
-            margin: 0 auto 80px;
-            padding: 0 20px;
-            height: 320px; /* ارتفاع مناسب للديسكتوب */
-            overflow: hidden;
+            max-width: 1000px; margin: 0 auto 80px; padding: 0 20px; height: 320px; overflow: hidden;
         }
-
         .reviews-slide {
-            position: absolute;
-            top: 0; left: 0; width: 100%;
-            display: flex; /* جنب بعض في الديسكتوب */
-            gap: 20px;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 1s ease-in-out, visibility 1s ease-in-out;
-            pointer-events: none;
+            position: absolute; top: 0; left: 0; width: 100%;
+            display: flex; gap: 20px; opacity: 0; visibility: hidden;
+            transition: opacity 1s ease-in-out, visibility 1s ease-in-out; pointer-events: none;
         }
-
-        .reviews-slide.active {
-            opacity: 1;
-            visibility: visible;
-            pointer-events: all;
-            z-index: 2;
-        }
-
+        .reviews-slide.active { opacity: 1; visibility: visible; pointer-events: all; z-index: 2; }
         .review-card {
-            flex: 1; /* كل كارد ياخذ مساحة متساوية */
-            background: var(--bg-card);
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: var(--shadow-soft);
-            border: 1px solid rgba(191, 165, 117, 0.2);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+            flex: 1; background: var(--bg-card); padding: 30px; border-radius: 20px;
+            box-shadow: var(--shadow-soft); border: 1px solid rgba(191, 165, 117, 0.2);
+            display: flex; flex-direction: column; justify-content: center;
         }
-
         .review-text { font-size: 1rem; color: var(--text-main); margin-bottom: 15px; font-style: italic; line-height: 1.6; }
         .review-header { display: flex; justify-content: space-between; margin-bottom: 10px; }
         .reviewer-name { font-weight: 700; color: var(--primary-gold); font-family: 'Amiri'; font-size: 1.1rem; }
         .stars { color: #FFC107; font-size: 0.9rem; }
 
-        /* تعديلات السلايدر للجوال */
         @media (max-width: 768px) {
-            .reviews-container {
-                height: 550px; /* زيادة الارتفاع عشان الكرتين يجون فوق بعض */
-            }
-            .reviews-slide {
-                flex-direction: column; /* ترتيب عمودي في الجوال */
-            }
-            .review-card {
-                padding: 20px; /* تقليل الحواف شوي */
-            }
+            .reviews-container { height: 550px; }
+            .reviews-slide { flex-direction: column; }
+            .review-card { padding: 20px; }
             .review-text { font-size: 0.9rem; }
         }
 
         footer { background: linear-gradient(to top, #1F2220, #2C3E30); color: #aaa; padding: 60px 20px 100px; text-align: center; }
         .footer-logo-img { width: 120px; height: auto; margin: 0 auto 30px; display: block; border-radius: 50%; box-shadow: 0 5px 20px rgba(0,0,0,0.5); }
         .contact-grid { display: flex; gap: 20px; justify-content: center; margin: 25px 0; flex-wrap: wrap; }
-        .contact-icon { width: 50px; height: 50px; background: rgba(255,255,255,0.05); border: 1px solid rgba(191, 165, 117, 0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--primary-gold); font-size: 1.2rem; text-decoration: none; margin: 0 auto 5px; }
+        .contact-icon { width: 50px; height: 50px; background: rgba(255,255,255,0.05); border: 1px solid rgba(191, 165, 117, 0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--primary-gold); font-size: 1.2rem; text-decoration: none; margin: 0 auto 5px; transition: 0.3s; }
+        .contact-icon:hover { transform: rotate(15deg); background: var(--primary-gold); color: var(--primary-dark); }
 
         .bottom-bar { position: fixed; bottom: 20px; left: 20px; z-index: 999; }
         .wa-btn { 
@@ -248,8 +266,9 @@
         }
 
         @keyframes pulse-wa {
-            0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(37, 211, 102, 0); }
+            0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); transform: scale(1); }
+            50% { transform: scale(1.05); }
+            70% { box-shadow: 0 0 0 10px rgba(37, 211, 102, 0); transform: scale(1); }
             100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
         }
 
@@ -288,7 +307,7 @@
     <section class="hero">
         <div class="hero-content" data-aos="zoom-in" data-aos-duration="1200">
             <div class="hero-title-wrapper">
-                <h1>Patchouli Spa</h1>
+                <h1 class="shimmer-text">Patchouli Spa</h1>
             </div>
         </div>
     </section>
@@ -309,11 +328,11 @@
         <p class="story-text">
             "لأنك تستاهلين بريك.. جهزنا لك باتشولي ليكون مساحتك الخاصة. انسى زحمة الدنيا، وخلي الباقي علينا.. بنهتم فيك وبجمالك بأدق التفاصيل."
         </p>
-        <div class="story-decoration"></div>
+        <div class="leaf-divider"><i class="fas fa-leaf leaf-icon"></i></div>
     </section>
 
     <div class="section-header" id="services">
-        <h2 class="section-title">وش بخاطرك اليوم؟</h2>
+        <h2 class="section-title shimmer-text">وش بخاطرك اليوم؟</h2>
         <p class="section-desc">اختاري الدلع اللي يناسبك</p>
     </div>
 
@@ -422,9 +441,11 @@
         </div>
     </div>
 
+    <div class="leaf-divider"><i class="fas fa-leaf leaf-icon"></i></div>
+
     <div class="gift-section" data-aos="fade-up">
         <div class="gift-content">
-            <h2 class="gift-title">فرحيهم بهدية</h2>
+            <h2 class="gift-title shimmer-text">فرحيهم بهدية</h2>
             <p class="gift-desc">لأن الهدايا الحلوة تفرق، جهزنا لك كوبونات إهداء تبيض الوجه.. أهدي اللي تحبينهم وقت من الاسترخاء.</p>
             <a href="https://wa.me/966569663331?text=مرحباً، أبي أطلب كوبون هدية" class="pkg-btn">اطلبي كوبون الإهداء</a>
         </div>
@@ -432,7 +453,7 @@
     </div>
 
     <div class="packages-wrapper" id="packages">
-        <h2 class="section-title" style="margin-bottom:40px;">بكجات الدلع</h2>
+        <h2 class="section-title shimmer-text" style="margin-bottom:40px;">بكجات الدلع</h2>
         <div class="packages-scroll">
             <div class="pkg-card">
                 <h3 class="pkg-name">بكج الشعر</h3>
@@ -456,7 +477,7 @@
     </div>
 
     <div class="section-header" id="faq">
-        <h2 class="section-title">يمكن يدور ببالك..</h2>
+        <h2 class="section-title shimmer-text">يمكن يدور ببالك..</h2>
     </div>
     <div class="faq-container">
         <div class="faq-row">
@@ -469,8 +490,10 @@
         </div>
     </div>
 
+    <div class="leaf-divider"><i class="fas fa-leaf leaf-icon"></i></div>
+
     <div class="section-header">
-        <h2 class="section-title">كلامكم العسل</h2>
+        <h2 class="section-title shimmer-text">كلامكم العسل</h2>
         <p class="section-desc">مبسوطين بخدمة أكثر من 1400 عميلة زيك</p>
     </div>
 
@@ -594,19 +617,12 @@
             let slides = document.querySelectorAll('.reviews-slide');
             let currentIndex = 0;
             
-            // دالة تغيير الشريحة
             function showNextSlide() {
-                // إخفاء الشريحة الحالية
                 slides[currentIndex].classList.remove('active');
-                
-                // الانتقال للشريحة التالية (مع العودة للأولى بعد الوصول للنهاية)
                 currentIndex = (currentIndex + 1) % slides.length;
-                
-                // إظهار الشريحة الجديدة
                 slides[currentIndex].classList.add('active');
             }
 
-            // تشغيل التبديل كل 5000 ميلي ثانية (5 ثواني)
             setInterval(showNextSlide, 5000);
         });
     </script>
