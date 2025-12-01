@@ -26,15 +26,44 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
         html { scroll-behavior: smooth; }
+        
+        /* 1. تخصيص شريط التمرير (Scrollbar) */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-main); }
+        ::-webkit-scrollbar-thumb { background: var(--primary-gold); border-radius: 10px; border: 2px solid var(--bg-main); }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary-dark); }
+
+        /* 2. تخصيص لون تحديد النص */
+        ::selection { background: var(--primary-gold); color: #fff; }
+
         body {
             font-family: 'Cairo', sans-serif; background-color: var(--bg-main); color: var(--text-main);
             overflow-x: hidden; padding-bottom: 100px; line-height: 1.8; position: relative;
         }
+
+        /* نويز خفيف للخلفية */
         body::before {
             content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
-            opacity: 0.4; pointer-events: none; z-index: 9999;
+            opacity: 0.4; pointer-events: none; z-index: 9998;
         }
+
+        /* 3. خلفية متحركة (Bokeh Effect) */
+        .bokeh-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: -1; pointer-events: none;
+        }
+        .bokeh {
+            position: absolute; width: 40vw; height: 40vw; border-radius: 50%;
+            background: radial-gradient(circle, rgba(191, 165, 117, 0.15) 0%, rgba(191, 165, 117, 0) 70%);
+            animation: moveBokeh 20s infinite alternate ease-in-out;
+        }
+        .bokeh:nth-child(1) { top: -10%; left: -10%; animation-duration: 25s; }
+        .bokeh:nth-child(2) { bottom: -10%; right: -10%; animation-duration: 30s; animation-delay: -5s; background: radial-gradient(circle, rgba(47, 62, 50, 0.08) 0%, rgba(47, 62, 50, 0) 70%); }
+        @keyframes moveBokeh {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(50px, 50px) scale(1.2); }
+        }
+
         h1, h2, h3, h4, .serif-font { font-family: 'Amiri', serif; }
 
         /* اللودر */
@@ -43,9 +72,8 @@
             display: flex; justify-content: center; align-items: center; transition: opacity 0.8s ease, visibility 0.8s ease;
         }
         .loader-logo { 
-            width: 120px; 
-            border-radius: 50%;
-            box-shadow: 0 0 30px rgba(191, 165, 117, 0.3);
+            width: 120px; border-radius: 50%;
+            box-shadow: 0 0 40px rgba(191, 165, 117, 0.4);
             animation: pulse 2s infinite; 
         }
         .loader-hidden { opacity: 0; visibility: hidden; }
@@ -57,17 +85,13 @@
         /* الهيدر */
         header {
             position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; padding: 15px 30px; 
-            background: rgba(244, 241, 234, 0.8); backdrop-filter: blur(15px);
+            background: rgba(244, 241, 234, 0.85); backdrop-filter: blur(20px); /* زيادة التغبيش */
             display: flex; justify-content: space-between; align-items: center;
             border-bottom: 1px solid rgba(191, 165, 117, 0.1); transition: 0.3s;
         }
-        .logo-header { 
-            height: 60px; 
-            width: auto; 
-            border-radius: 50%;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); 
-        }
+        .logo-header { height: 60px; width: auto; border-radius: 50%; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
         .menu-icon { font-size: 1.6rem; color: var(--primary-dark); cursor: pointer; transition: 0.3s; }
+        .menu-icon:hover { color: var(--primary-gold); transform: rotate(90deg); } /* حركة عند الماوس */
         
         .sidebar {
             position: fixed; top: 0; right: -320px; width: 300px; height: 100%;
@@ -75,44 +99,42 @@
             padding: 50px 30px; display: flex; flex-direction: column; box-shadow: -10px 0 30px rgba(0,0,0,0.2);
         }
         .sidebar.active { right: 0; }
-        .close-btn { align-self: flex-end; font-size: 1.5rem; color: var(--text-creamy); cursor: pointer; margin-bottom: 50px; }
+        .close-btn { align-self: flex-end; font-size: 1.5rem; color: var(--text-creamy); cursor: pointer; margin-bottom: 50px; transition: 0.3s; }
+        .close-btn:hover { transform: rotate(90deg); color: var(--primary-gold); }
         .sidebar a {
             color: var(--text-creamy); text-decoration: none; font-size: 1.3rem; margin-bottom: 25px;
-            font-family: 'Amiri'; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px; display: block;
+            font-family: 'Amiri'; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px; display: block; transition: 0.3s;
         }
+        .sidebar a:hover { color: var(--primary-gold); padding-right: 10px; border-color: var(--primary-gold); }
+        
         .overlay-bg {
             position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1500;
-            display: none; opacity: 0; transition: 0.4s; backdrop-filter: blur(3px);
+            display: none; opacity: 0; transition: 0.4s; backdrop-filter: blur(4px);
         }
         .overlay-bg.active { display: block; opacity: 1; }
 
         /* الهيرو */
         .hero {
-            height: 90vh; position: relative; display: flex; align-items: center; justify-content: center; text-align: center;
+            height: 95vh; position: relative; display: flex; align-items: center; justify-content: center; text-align: center;
             background: url('https://images.unsplash.com/photo-1560066984-138dadb4c035?ixlib=rb-4.0.3&auto=format&fit=crop&w=1674&q=80') center/cover no-repeat fixed;
         }
-        .hero::after { content:''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.6) 100%); }
+        .hero::after { content:''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.5) 100%); }
         .hero-content { position: relative; z-index: 2; padding: 20px; }
         
         .hero-title-wrapper {
-            border: 2px solid var(--primary-gold);
-            padding: 20px 40px;
-            border-radius: 50px;
-            background: rgba(47, 62, 50, 0.4);
-            backdrop-filter: blur(5px);
+            border: 2px solid rgba(191, 165, 117, 0.6); /* حدود ذهبية شفافة */
+            padding: 25px 50px;
+            border-radius: 60px;
+            background: rgba(47, 62, 50, 0.5); /* خلفية داكنة شفافة */
+            backdrop-filter: blur(8px);
             display: inline-block;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            animation: fadeInScale 1.5s ease-out;
         }
         .hero h1 { 
-            font-family: 'Amiri', serif; 
-            font-size: 5rem; 
-            color: var(--primary-gold); 
-            margin: 0;
-            font-weight: 700; 
-            text-shadow: 0 4px 20px rgba(0,0,0,0.6); 
-            letter-spacing: 2px;
-            text-transform: uppercase;
+            font-family: 'Amiri', serif; font-size: 5rem; color: var(--primary-gold); margin: 0;
+            font-weight: 700; text-shadow: 0 4px 20px rgba(0,0,0,0.8); letter-spacing: 2px; text-transform: uppercase;
         }
-        .hero p { display: none; }
 
         .brands-strip { background: var(--primary-dark); padding: 30px 0; overflow: hidden; white-space: nowrap; }
         .brands-track { display: inline-block; animation: scroll 40s linear infinite; }
@@ -120,7 +142,7 @@
         @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(50%); } }
 
         .story-section { padding: 120px 25px; text-align: center; max-width: 900px; margin: 0 auto; position: relative; }
-        .story-icon { font-size: 2.5rem; color: var(--primary-gold); margin-bottom: 25px; opacity: 0.8; }
+        .story-icon { font-size: 2.5rem; color: var(--primary-gold); margin-bottom: 25px; opacity: 0.8; animation: float 4s infinite ease-in-out; }
         .story-text { font-size: 1.5rem; color: var(--primary-dark); font-family: 'Amiri'; line-height: 2.2; }
         .story-decoration { width: 1px; height: 80px; background: linear-gradient(to bottom, var(--primary-gold), transparent); margin: 40px auto 0; }
 
@@ -133,20 +155,28 @@
         .tab-btn {
             padding: 12px 35px; border-radius: 50px; border: 1px solid rgba(191, 165, 117, 0.3);
             background: transparent; color: var(--text-sub); cursor: pointer; font-family: 'Cairo'; font-weight: 600; transition: 0.4s;
+            position: relative; overflow: hidden;
         }
+        /* تأثير عند مرور الماوس على الأزرار */
+        .tab-btn:hover { border-color: var(--primary-dark); color: var(--primary-dark); }
         .tab-btn.active { background: var(--primary-dark); color: var(--text-creamy); border-color: var(--primary-dark); box-shadow: 0 10px 20px rgba(47, 62, 50, 0.2); }
+        
         .tab-content { display: none; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; animation: fadeInUp 0.8s; max-width: 1200px; margin: 0 auto; }
         .tab-content.active { display: grid; }
 
+        /* 4. كروت الخدمات بلمسة زجاجية */
         .service-card {
-            background: var(--bg-card); border-radius: 20px; padding: 35px;
+            background: rgba(253, 251, 247, 0.8); /* شفافية خفيفة */
+            backdrop-filter: blur(10px); /* تأثير الزجاج */
+            border-radius: 20px; padding: 35px;
             box-shadow: var(--shadow-soft); display: flex; flex-direction: column;
-            transition: all 0.4s ease; border: 1px solid rgba(255,255,255,1);
+            transition: all 0.4s ease; border: 1px solid rgba(255,255,255,0.6);
             position: relative; overflow: hidden; border-right: 4px solid var(--primary-gold);
         }
         .service-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); border-color: var(--primary-gold); }
         .srv-title { font-size: 1.6rem; color: var(--primary-dark); margin-bottom: 20px; font-weight: 700; font-family: 'Amiri'; border-bottom: 1px solid rgba(191, 165, 117, 0.2); padding-bottom: 10px; }
-        .menu-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px dashed rgba(191, 165, 117, 0.3); font-size: 0.95rem; }
+        .menu-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px dashed rgba(191, 165, 117, 0.3); font-size: 0.95rem; transition: 0.2s; }
+        .menu-item:hover { padding-right: 5px; color: var(--primary-dark); } /* حركة بسيطة للنص */
         .menu-price { font-family: 'Amiri'; font-weight: 700; color: var(--primary-gold); font-size: 1.1rem; }
         .book-btn-card { margin-top: 20px; text-align: center; font-size: 0.9rem; color: var(--primary-dark); text-decoration: none; font-weight: 600; border: 1px solid var(--primary-dark); padding: 8px; border-radius: 30px; transition: 0.3s; }
         .book-btn-card:hover { background: var(--primary-dark); color: var(--text-creamy); }
@@ -161,26 +191,37 @@
         .pkg-card:hover { transform: translateY(-10px); }
         .pkg-card.premium { background: var(--primary-dark); color: #FDFBF7; transform: scale(1.05); z-index: 2; box-shadow: 0 20px 50px rgba(47, 62, 50, 0.3); }
         .pkg-card.premium:hover { transform: scale(1.05) translateY(-5px); }
-
         .pkg-name { font-size: 1.6rem; font-family: 'Amiri'; margin-bottom: 15px; }
         .pkg-price { font-size: 2.2rem; font-weight: 700; margin-bottom: 25px; font-family: 'Amiri'; }
         .pkg-list { list-style: none; margin-bottom: 35px; font-size: 1rem; opacity: 0.9; line-height: 2; }
         .pkg-btn { padding: 12px 30px; border-radius: 50px; text-decoration: none; border: 1px solid var(--primary-gold); color: var(--primary-gold); display: inline-block; transition: 0.3s; font-weight: 600; }
+        .pkg-btn:hover { background: var(--primary-gold); color: #fff; }
         .premium .pkg-btn { background: var(--primary-gold); color: var(--primary-dark); border-color: var(--primary-gold); }
+        .premium .pkg-btn:hover { background: #fff; color: var(--primary-dark); }
 
         .gift-section {
             background: linear-gradient(135deg, #FDFBF7 0%, #F1EEE5 100%);
             margin: 60px 20px; padding: 60px 30px; border-radius: 40px;
             display: flex; align-items: center; justify-content: space-between;
             border: 1px solid rgba(191, 165, 117, 0.2); flex-wrap: wrap; gap: 30px;
+            position: relative; overflow: hidden;
         }
-        .gift-content { flex: 1; min-width: 300px; }
+        /* لمعة ذهبية متحركة */
+        .gift-section::after {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: shine 4s infinite;
+        }
+        @keyframes shine { 100% { left: 100%; } }
+        
+        .gift-content { flex: 1; min-width: 300px; position: relative; z-index: 2; }
         .gift-title { font-family: 'Amiri'; font-size: 2.2rem; color: var(--primary-dark); margin-bottom: 15px; }
         .gift-desc { color: var(--text-sub); margin-bottom: 25px; font-size: 1.1rem; }
         .gift-icon { font-size: 5rem; color: var(--primary-gold); opacity: 0.2; transform: rotate(-15deg); }
         
         .faq-container { max-width: 750px; margin: 0 auto 80px; padding: 0 20px; }
         .faq-row { background: #fff; border-radius: 15px; margin-bottom: 20px; padding: 0 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.02); transition: 0.3s; }
+        .faq-row:hover { box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
         .faq-title { padding: 20px 0; cursor: pointer; font-weight: 600; display: flex; justify-content: space-between; color: var(--primary-dark); }
         .faq-body { max-height: 0; overflow: hidden; transition: 0.4s; color: var(--text-sub); font-size: 0.95rem; }
         .faq-row.active .faq-body { max-height: 150px; padding-bottom: 25px; }
@@ -188,7 +229,8 @@
         .reviews-container { max-width: 1000px; margin: 0 auto 100px; padding: 0 20px; position: relative; height: 240px; overflow: hidden; }
         .reviews-slide { position: absolute; top: 0; left: 0; width: 100%; display: flex; gap: 30px; opacity: 0; transition: opacity 1s ease-in-out; pointer-events: none; }
         .reviews-slide.active { opacity: 1; pointer-events: all; z-index: 2; }
-        .review-card { flex: 1; background: var(--bg-card); padding: 30px; border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); border: 1px solid rgba(191, 165, 117, 0.2); display: flex; flex-direction: column; justify-content: center; }
+        .review-card { flex: 1; background: var(--bg-card); padding: 30px; border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); border: 1px solid rgba(191, 165, 117, 0.2); display: flex; flex-direction: column; justify-content: center; transition: 0.3s; }
+        .review-card:hover { transform: translateY(-5px); border-color: var(--primary-gold); }
         .review-header { display: flex; justify-content: space-between; margin-bottom: 10px; }
         .stars { color: #FFC107; } .quote-icon { color: var(--primary-gold); opacity: 0.3; }
 
@@ -197,15 +239,15 @@
             width: 150px; height: auto; margin: 0 auto 40px; display: block;
             border-radius: 50%; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: transform 0.3s ease;
         }
-        .footer-logo-img:hover { transform: translateY(-5px); }
+        .footer-logo-img:hover { transform: translateY(-5px); filter: brightness(1.1); }
 
         .contact-grid { display: flex; gap: 30px; justify-content: center; margin: 30px 0; flex-wrap: wrap; }
         .contact-icon { width: 60px; height: 60px; background: rgba(255,255,255,0.05); border: 1px solid rgba(191, 165, 117, 0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--primary-gold); font-size: 1.5rem; text-decoration: none; transition: 0.4s; margin: 0 auto 10px; }
-        .contact-icon:hover { color: var(--primary-dark); background: var(--primary-gold); transform: translateY(-5px); }
+        .contact-icon:hover { color: var(--primary-dark); background: var(--primary-gold); transform: translateY(-5px) rotate(10deg); }
         .contact-label { font-size: 0.9rem; color: var(--text-creamy); opacity: 0.8; }
         .footer-divider { width: 100px; height: 1px; background: rgba(255,255,255,0.1); margin: 30px auto; }
 
-        /* تعديلات أيقونة الواتس العائمة (يسار) */
+        /* 5. زر الواتس العائم في الزاوية اليسرى */
         .bottom-bar { 
             position: fixed; 
             bottom: 30px; 
@@ -215,15 +257,13 @@
             box-shadow: none; 
             z-index: 999; 
             border: none;
-            display: block;
-            padding: 0;
-            transform: none; /* إلغاء التوسيط القديم */
+            display: block; padding: 0;
         }
 
         .wa-btn { 
             background: #25D366; 
             color: white; 
-            width: 60px; height: 60px; /* تكبير الحجم ليكون واضح */
+            width: 60px; height: 60px; /* حجم مناسب */
             border-radius: 50%; 
             display: flex; align-items: center; justify-content: center; 
             font-size: 2rem; 
@@ -231,10 +271,12 @@
             transition: 0.3s; 
             box-shadow: 0 5px 20px rgba(0,0,0,0.3);
             border: 2px solid rgba(255,255,255,0.2);
-            animation: pulse-wa 2s infinite;
+            /* نبض الأيقونة */
+            animation: pulse-wa 2.5s infinite;
         }
         .wa-btn:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 10px 25px rgba(37, 211, 102, 0.4); }
 
+        /* أنيميشن نبض الواتس (Ripple Effect) */
         @keyframes pulse-wa {
             0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
             70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
@@ -253,10 +295,15 @@
 
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
-        @keyframes sparkle { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        @keyframes fadeInScale { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
     </style>
 </head>
 <body>
+
+    <div class="bokeh-container">
+        <div class="bokeh"></div>
+        <div class="bokeh"></div>
+    </div>
 
     <div class="loader-wrapper" id="loader">
         <img src="250276776_966463217552234_6839100984766045685_n.jpg" alt="Logo" class="loader-logo">
@@ -437,7 +484,7 @@
                 <h3 class="pkg-name">باقة الدلال</h3>
                 <div class="pkg-price gold-text">580 ريال</div>
                 <ul class="pkg-list"><li>مساج استرخائي للجسم</li><li>مساج برافين لليدين والرجلين</li><li>مساج خاص بالشعر</li><li>بدكير + شسوار</li></ul>
-                <a href="https://wa.me/966569663331?text=مرحباً، أبي أحجز باقة الدلال" class="pkg-btn">ابي هالبكج</a>
+                <a href="https://wa.me/966569663331?text=مرحباً، أبي أحجز باقة الدلال" class="pkg-btn">دللوني بهالبكج</a>
             </div>
             <div class="pkg-card">
                 <h3 class="pkg-name">العروس</h3>
@@ -583,5 +630,4 @@
         });
     </script>
 </body>
-</html>
 </html>
